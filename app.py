@@ -32,3 +32,22 @@ class MultiDNN(nn.Module):
             nn.Linear(192, 96), nn.BatchNorm1d(96), nn.ReLU(), nn.Dropout(0.25),
             nn.Linear(96, 4))
     def forward(self, x): return self.net(x)
+
+# --------------------
+# Load artifacts ONCE
+# --------------------
+with open('final_scaler.pkl', 'rb') as f:
+    scaler = pickle.load(f)
+with open('final_bin_le.pkl', 'rb') as f:
+    binary_le = pickle.load(f)
+with open('final_multi_le.pkl', 'rb') as f:
+    multi_le = pickle.load(f)
+
+device = torch.device('cpu')
+binary_model = BinaryDNN()
+binary_model.load_state_dict(torch.load('final_bin_best.pth', map_location=device))
+binary_model.eval()
+multi_model = MultiDNN()
+multi_model.load_state_dict(torch.load('final_multi_best.pth', map_location=device))
+multi_model.eval()
+
