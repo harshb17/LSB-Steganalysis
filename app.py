@@ -51,3 +51,10 @@ multi_model = MultiDNN()
 multi_model.load_state_dict(torch.load('final_multi_best.pth', map_location=device))
 multi_model.eval()
 
+# --------------------
+# V3 Feature extraction
+# --------------------
+def extract_lsb_feature(img, k=2):
+    mask = (1 << k) - 1
+    return (img & mask).flatten()
+
