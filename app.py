@@ -58,3 +58,21 @@ def extract_lsb_feature(img, k=2):
     mask = (1 << k) - 1
     return (img & mask).flatten()
 
+def extract_randomness_features(lsb_feat):
+    chunk_size = 512
+    lsb_reshaped = lsb_feat.reshape(-1, chunk_size)
+    ent_values = []
+    for block in lsb_reshaped[::10]:
+        hist = np.bincount(block.astype(np.int32), minlength=4)
+        hist = hist / max(hist.sum(), 1)
+        ent = entropy(hist + 1e-10)
+        ent_values.append(ent)
+    mean_entropy = np.mean(ent_values)
+    sample = lsb_feat[:5000].astype(np.int32)
+    transitions = np.sum(np.abs(np.diff(sample)))
+    transition_rate = transitions / max(len(sample) - 1, 1)
+    hist_full = np.bincount(lsb_feat.astype(np.int32), minlength=4)
+    expected = len(lsb_feat) / 4
+    chi2_stat = np.sum((hist_full - expected) ** 2 / expected) if expected > 0 else 0
+    return np.array([mean_entropy, transition_rate, chi2_stat], dtype=np.float32)
+
