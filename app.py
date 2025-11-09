@@ -76,3 +76,21 @@ def extract_randomness_features(lsb_feat):
     chi2_stat = np.sum((hist_full - expected) ** 2 / expected) if expected > 0 else 0
     return np.array([mean_entropy, transition_rate, chi2_stat], dtype=np.float32)
 
+def extract_url_pattern_features(lsb_feat):
+    chunk_size = 4
+    num_chunks = len(lsb_feat) // chunk_size
+    lsb_trimmed = lsb_feat[:num_chunks * chunk_size].astype(np.int32)
+    byte_values = []
+    for i in range(0, len(lsb_trimmed), chunk_size):
+        val = (lsb_trimmed[i] << 6) | (lsb_trimmed[i+1] << 4) | (lsb_trimmed[i+2] << 2) | lsb_trimmed[i+3]
+        byte_values.append(val)
+    byte_values = np.array(byte_values)
+    url_char_count = np.sum((byte_values >= 10) & (byte_values <= 15))
+    html_char_count = np.sum((byte_values >= 0) & (byte_values <= 5))
+    unique_ratio = len(np.unique(byte_values)) / max(len(byte_values), 1)
+    return np.array([
+        url_char_count / max(len(byte_values), 1),
+        html_char_count / max(len(byte_values), 1),
+        unique_ratio
+    ], dtype=np.float32)
+
