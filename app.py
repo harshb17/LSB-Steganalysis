@@ -94,3 +94,14 @@ def extract_url_pattern_features(lsb_feat):
         unique_ratio
     ], dtype=np.float32)
 
+def extract_features(image, k=2):
+    image = image.resize((256, 256), Image.LANCZOS)
+    if image.mode != 'RGB':
+        image = image.convert('RGB')
+    img_array = np.array(image)
+    lsb_feat = extract_lsb_feature(img_array, k=k)
+    rand_feat = extract_randomness_features(lsb_feat)
+    url_feat = extract_url_pattern_features(lsb_feat)
+    combined = np.concatenate([lsb_feat.astype(np.float32), rand_feat, url_feat])
+    return combined
+
