@@ -105,3 +105,10 @@ def extract_features(image, k=2):
     combined = np.concatenate([lsb_feat.astype(np.float32), rand_feat, url_feat])
     return combined
 
+# --------------------
+# Flask endpoints
+# --------------------
+@app.route('/')
+def index():
+    return render_template('index.html')
+
