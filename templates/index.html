@@ -9,6 +9,53 @@
 </head>
 <body>
 <div class="container-fluid">
+  <div class="main-card">
+    <!-- Watermark icon -->
+    <div class="bg-watermark"><span class="icon-big icon-stego">🔒</span></div>
+    <!-- Header section -->
+    <div class="header-title">Multi-Payload LSB Steganalysis Demo</div>
+    <div class="header-desc">
+      Analyze PNG images for hidden data using advanced<br>Least Significant Bit detection and AI.<br>
+      Upload an image and instantly detect steganographic payloads!
+    </div>
+    <!-- Info section -->
+    <div class="info-glass mb-4">
+      <button class="info-collapsible" onclick="toggleInfo()">About & Knowledge  </button>
+      <div id="infoPanel" class="info-content collapsed">
+        <div class="info-title">What is Steganography?</div>
+        <div class="info-snip">Steganography is the science of hiding information within digital media so it is invisible to regular inspection. Images, audio, and video files are common carriers.</div>
+        <div class="info-title mt-2">What are LSBs and Payloads?</div>
+        <div class="info-snip">LSB (Least Significant Bit) steganography modifies the lowest-value bits in an image (usually the last 1 or 2 of each pixel) to embed secret data called the payload.</div>
+        <div class="info-title mt-2">What Payload Types Are Detected?</div>
+        <table class="info-payloads mb-1 small">
+          <tr><th>Payload</th><th>Meaning</th></tr>
+          <tr><td>HTML</td><td>Hidden HTML code</td></tr>
+          <tr><td>JS</td><td>Hidden JavaScript code</td></tr>
+          <tr><td>PS</td><td>Hidden Powershell script</td></tr>
+          <tr><td>Clean</td><td>No payload / genuine image</td></tr>
+        </table>
+        <div class="info-title mt-2">How does the model decide?</div>
+        <div class="info-snip mb-2">The neural network analyzes subtle changes in the 2 least significant bits of every image pixel, plus additional statistics, to predict if a payload is present and its type. Confidence is shown for each class.</div>
+      </div>
+    </div>
+    <!-- Upload & results UI -->
+    <div class="dropzone" id="dropzone">
+      <span class="fs-3">🖼️</span>
+      <div class="mt-2 mb-1 fw-semibold">Upload PNG image or drag & drop</div>
+      <div class="text-muted small mb-0">Max 5MB &nbsp;|&nbsp; Secure PyTorch Model</div>
+      <input type="file" id="fileInput" accept="image/png" style="display:none;">
+    </div>
+    <div id="preview" style="display:none;" class="text-center mt-3">
+      <img id="previewImg" class="preview-img mb-2" alt="Preview"/>
+      <div id="filename" class="small text-muted mt-1"></div>
+    </div>
+    <button id="analyzeBtn" class="btn btn-primary w-100 mt-3 fw-bold" disabled>Analyze Image</button>
+    <div id="loading" style="display:none;" class="text-center mt-3">
+      <div class="spinner-border text-primary" style="width:2.1rem;height:2.1rem;"></div>
+      <p class="mt-2">Analyzing image...</p>
+    </div>
+    <div id="results" style="display:none;" class="mt-4"></div>
+  </div>
 </div>
 </body>
 </html>
