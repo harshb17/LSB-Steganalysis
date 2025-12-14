@@ -6,6 +6,78 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Inter:600,700&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      min-height: 100vh;
+      background: linear-gradient(120deg,#090e1a 0%,#1e293b 75%,#64748b 100%);
+      font-family: 'Inter', Arial, sans-serif;
+      margin:0;padding:0;
+      overflow-x: hidden;
+    }
+    .main-card {
+      background: rgba(255,255,255,0.92);
+      border-radius: 2rem;
+      box-shadow: 0 12px 40px rgba(20,32,64,0.21);
+      margin: 2.2rem auto;
+      max-width: 790px;
+      width: 98vw;
+      padding: 2.7rem 2.2rem 2.7rem 2.2rem;
+      transition: box-shadow 0.18s;
+      position: relative;
+      backdrop-filter: blur(2px);
+    }
+    .header-title {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: #2563eb;
+      text-align: center;
+      letter-spacing: .016em;
+      margin-bottom: 0.18em;
+      text-shadow: 0 3px 12px #64748b26;
+    }
+    .header-desc {
+      text-align: center;
+      color: #334155;
+      font-size: 1.22rem;
+      font-weight: 600;
+      margin-bottom: 1.5em;
+      letter-spacing: 0.07em;
+    }
+    /* Glass info panel */
+    .info-glass {
+      background: rgba(229,240,255,0.82);
+      border-radius: 1.1rem;
+      box-shadow: 0 2px 18px #0797c522, 0 0.5px 3.5px #ffd70033;
+      padding: 1.3em 1.3em 0.9em 1.3em;
+      margin-bottom: 1.45em;
+    }
+    .info-title { color: #2563eb; font-size: 1.12em; font-weight: 700; margin-bottom: 0.7em;}
+    .info-snip { color: #23304f; font-size: 0.97em; margin-bottom: 0.3em;}
+    .info-payloads td, .info-payloads th {padding: 0.26em .8em;}
+    .info-collapsible { cursor: pointer; font-size: 1.07rem; color: #334155; background:none;border:none;font-weight:700;}
+    .info-collapsible:after {content: "▼";font-size:.9em;margin-left:.5em;}
+    .info-collapsible.collapsed:after {content:"►";}
+    .info-content {display:block;transition: max-height .3s cubic-bezier(.32,1.8,.75,1);}
+    .info-content.collapsed {display:none;}
+    .dropzone { border: 3px dashed #2563eb; border-radius: 1.2rem; text-align: center; background: #f5faff; padding: 2.3rem 1.1rem; cursor: pointer; transition: border-color 0.22s, background 0.2s, box-shadow .21s;}
+    .dropzone:hover { background: #dbeafe; border-color: #3b82f6; box-shadow: 0 3px 26px #2563eb33; }
+    .preview-img { max-width: 250px; border-radius: 1rem; margin-top: 1rem; box-shadow: 0 0 16px #3b82f655; background: #fff;}
+    .result-badge { font-size: 1.2em; font-weight: 800; padding: 0.45em 1.6em; border-radius: 2em; letter-spacing: 0.03em; display:inline-block; margin-bottom:0.3em; box-shadow: 0 3px 10px #0002;}
+    .prob-bar-wrap { display: flex; align-items: center; gap:0.45em; margin-bottom: 0.6em;}
+    .prob-bar-label { width:80px; font-weight:700; font-size:1.09em; color:#222b3a; letter-spacing:.01em; text-transform:uppercase; text-align:right;}
+    .prob-bar { flex: 1; height: 29px; border-radius: 1em; background: #e0e7ef; overflow: hidden; position:relative; margin-right:6px;}
+    .prob-bar-inner { height:100%;display:flex;align-items:center; font-weight:700;color:#fff;font-size:1.17em;padding-left:1em; border-radius:1em;transition:width 0.55s cubic-bezier(.32,1.2,.69,1);}
+    .prob-bar-value { min-width:52px;text-align:right;font-weight:600;font-size:1.05em;margin-left:4px; color:#1e293b;}
+    .icon-big { font-size: 2.2em; vertical-align: sub; margin-right: 0.23em;}
+    .icon-clean { color: #1dd8a2;}
+    .icon-stego { color: #ef4444;}
+    /* Subtle watermark background icon */
+    .bg-watermark {
+      position: absolute; bottom: 14px; right: 18px; z-index:0; opacity:.12; font-size:5.5em; pointer-events:none;
+    }
+    @media(max-width: 900px){ .main-card{ max-width:99vw; padding:1.3rem}}
+    @media(max-width: 520px){ .prob-bar-label{width:54px;font-size:0.99em}}
+  </style>
 </head>
 <body>
 <div class="container-fluid">
