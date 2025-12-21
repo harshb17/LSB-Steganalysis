@@ -129,5 +129,51 @@
     <div id="results" style="display:none;" class="mt-4"></div>
   </div>
 </div>
+<script>
+let selectedFile = null;
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+const preview = document.getElementById('preview');
+const previewImg = document.getElementById('previewImg');
+const filenameDiv = document.getElementById('filename');
+const analyzeBtn = document.getElementById('analyzeBtn');
+const loading = document.getElementById('loading');
+const results = document.getElementById('results');
+const infoPanel = document.getElementById('infoPanel');
+
+dropzone.onclick = () => fileInput.click();
+dropzone.ondragover = (e) => { e.preventDefault(); dropzone.style.background = "#dbeafe"; };
+dropzone.ondragleave = () => dropzone.style.background = "#f5faff";
+dropzone.ondrop = (e) => {
+    e.preventDefault(); dropzone.style.background = "#dbeafe";
+    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+};
+fileInput.onchange = (e) => { if (e.target.files.length) handleFile(e.target.files[0]); };
+function handleFile(file) {
+    if (!file.name.toLowerCase().endsWith('.png')) { alert('Please select a PNG image.'); return; }
+    selectedFile = file; analyzeBtn.disabled = false;
+    preview.style.display = 'block';
+    filenameDiv.textContent = `${file.name} (${(file.size/1024).toFixed(1)} KB)`;
+    const reader = new FileReader();
+    reader.onload = e => { previewImg.src = e.target.result; }; reader.readAsDataURL(file);
+    results.style.display = 'none';
+}
+analyzeBtn.onclick = async () => {
+    if (!selectedFile) return;
+    loading.style.display = 'block'; results.style.display = 'none'; analyzeBtn.disabled = true;
+    const formData = new FormData(); formData.append('file', selectedFile);
+    try {
+        const resp = await fetch('/predict', { method:'POST', body:formData });
+        const data = await resp.json();
+        if (resp.ok) displayResults(data); else alert(data.error || 'Prediction failed');
+    } catch (e) { alert('Network error: ' + e.message); }
+    loading.style.display = 'none'; analyzeBtn.disabled = false;
+};
+// Collapsible info
+function toggleInfo(){
+    infoPanel.classList.toggle('collapsed');
+    document.querySelector('.info-collapsible').classList.toggle('collapsed');
+}
+</script>
 </body>
 </html>
