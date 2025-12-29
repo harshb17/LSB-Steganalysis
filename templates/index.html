@@ -174,6 +174,50 @@ function toggleInfo(){
     infoPanel.classList.toggle('collapsed');
     document.querySelector('.info-collapsible').classList.toggle('collapsed');
 }
+// Custom icons for clean/stego
+const CLEAN_EMOJI = '<span class="icon-big icon-clean">🔓</span>';
+const STEGO_EMOJI = '<span class="icon-big icon-stego">🔒</span>';
+function displayResults(data) {
+    let html = '';
+    const b = data.binary_prediction, m = data.multiclass_prediction;
+    html += `<div class="mb-2 text-center">
+        <span class="result-badge" 
+            style="background:${b.class==='clean'?'#14b8a6':'#ef4444'};color:#fff">
+            ${b.class==='clean' ? CLEAN_EMOJI+'CLEAN' : STEGO_EMOJI+'STEGO'}
+        </span>
+        <div class="small mt-1 mb-2" style="color:#34425a;">Binary prediction (Clean vs. Stego)</div>
+        <div class="prob-bar-wrap">
+            <span class="prob-bar-label">CLEAN</span>
+            <div class="prob-bar"><div class="prob-bar-inner" style="width:${(b.probabilities.clean*100).toFixed(1)}%;background:#10b981;"></div></div>
+            <span class="prob-bar-value">${(b.probabilities.clean*100).toFixed(1)}%</span>
+        </div>
+        <div class="prob-bar-wrap">
+            <span class="prob-bar-label">STEGO</span>
+            <div class="prob-bar"><div class="prob-bar-inner" style="width:${(b.probabilities.stego*100).toFixed(1)}%;background:#ef4444;"></div></div>
+            <span class="prob-bar-value">${(b.probabilities.stego*100).toFixed(1)}%</span>
+        </div>
+    </div>`;
+    if (b.class === 'stego') {
+        html += `<div class="mb-2 text-center">
+            <span class="result-badge" style="background:#3b82f6;color:#fff">Payload: ${m.payload_type.toUpperCase()}</span>
+            <div class="small mb-2" style="color:#2a3140;">Multi-class payload classification</div>`;
+        const colors = {html:'#6366f1',js:'#f97316',ps:'#14b8a6',clean:'#06b6d4'};
+        Object.entries(m.probabilities)
+            .sort((a,b)=>b[1]-a[1])
+            .forEach(([k,v]) => {
+                let color = colors[k] || '#818cf8';
+                html += `<div class="prob-bar-wrap">
+                    <span class="prob-bar-label">${k.toUpperCase()}</span>
+                    <div class="prob-bar">
+                        <div class="prob-bar-inner" style="width:${(v*100).toFixed(1)}%;background:${color};"></div>
+                    </div>
+                    <span class="prob-bar-value">${(v*100).toFixed(1)}%</span>
+                </div>`;
+            });
+        html += `</div>`;
+    }
+    results.innerHTML = html; results.style.display = 'block';
+}
 </script>
 </body>
 </html>
