@@ -112,3 +112,47 @@ def extract_features(image, k=2):
 def index():
     return render_template('index.html')
 
+@app.route('/predict', methods=['POST'])
+def predict():
+    try:
+        file = request.files['file']
+        image = Image.open(io.BytesIO(file.read()))
+        features = extract_features(image)
+        features_normalized = scaler.transform(features.reshape(1, -1)).astype(np.float32)
+        features_tensor = torch.FloatTensor(features_normalized)
+
+        with torch.no_grad():
+            binary_output = binary_model(features_tensor)
+            binary_probs = torch.softmax(binary_output, dim=1).cpu().numpy()[0]
+            binary_pred_idx = int(np.argmax(binary_probs))
+            binary_class = binary_le.classes_[binary_pred_idx]
+        
+        if binary_class == 'stego':
+            with torch.no_grad():
+                multi_output = multi_model(features_tensor)
+                multi_probs = torch.softmax(multi_output, dim=1).cpu().numpy()[0]
+                multi_pred_idx = int(np.argmax(multi_probs))
+                payload_type = multi_le.classes_[multi_pred_idx]
+        else:
+            payload_type = 'clean'
+            multi_probs = np.zeros(len(multi_le.classes_))
+            multi_probs[multi_le.transform(['clean'])[0]] = 1.0
+
+        result = {
+            'binary_prediction': {
+                'class': binary_class,
+                'confidence': float(binary_probs[binary_pred_idx]),
+                'probabilities': {c: float(binary_probs[binary_le.transform([c])[0]]) for c in binary_le.classes_}
+            },
+            'multiclass_prediction': {
+                'payload_type': payload_type,
+                'probabilities': {c: float(multi_probs[i]) for i, c in enumerate(multi_le.classes_)}
+            }
+        }
+        return jsonify(result)
+    except Exception as e:
+        import traceback
+        print('Error:', str(e))
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
