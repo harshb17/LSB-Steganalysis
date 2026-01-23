@@ -25,3 +25,31 @@ This project is an AI-powered web demo for detecting steganographic payloads in 
 - Client sends the image to backend `/predict` endpoint
 - Backend extracts features, normalizes & feeds them into binary and multi-class models
 - Results returned as JSON and shown in an interactive UI
+
+## ⚙️ Setup
+
+```bash
+pip install -r requirements.txt
+python app.py
+```
+
+The demo runs at `http://localhost:5000`.
+
+## 📦 Model Artifacts
+
+The backend expects `final_bin_best.pth`, `final_multi_best.pth`, `final_scaler.pkl`, `final_bin_le.pkl`, and `final_multi_le.pkl` in the project root. The artifact files committed here are Git LFS pointer stubs; place the actual trained artifacts in the project root before running the app.
+
+## 📚 About
+
+Steganography is the science of hiding secret data within digital files. This demo exposes hidden payloads embedded via LSB manipulation using AI.  
+Made by [Harsh Bhoi](https://github.com/harshb17).
+
+---
+
+## License
+
+Free for academic and personal demo use.
+
+## Contact
+
+For collaboration or research inquiries, open an Issue or contact via GitHub.
