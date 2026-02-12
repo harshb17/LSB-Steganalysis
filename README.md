@@ -37,7 +37,7 @@ The demo runs at `http://localhost:5000`.
 
 ## 📦 Model Artifacts
 
-The backend expects `final_bin_best.pth`, `final_multi_best.pth`, `final_scaler.pkl`, `final_bin_le.pkl`, and `final_multi_le.pkl` in the project root. The artifact files committed here are Git LFS pointer stubs; place the actual trained artifacts in the project root before running the app.
+The backend expects `final_bin_best.pth`, `final_multi_best.pth`, `final_scaler.pkl`, `final_bin_le.pkl`, and `final_multi_le.pkl` in the project root. The trained artifacts are tracked with Git LFS and download automatically when cloning; run `git lfs pull` if they are missing after checkout.
 
 ## 📚 About
 
